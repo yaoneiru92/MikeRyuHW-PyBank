@@ -1,3 +1,98 @@
+# Import from pathlib library, main class path
+from pathlib import Path
+import csv
+
+#Set File Path
+csvpath = Path(r"C:\Users\yaone\anaconda3\envs\dev\Class Projects\Python Day 3 PyBank HW\Budget_Data.csv")
+
+# Open csv file as object r for reading values 
+with open(csvpath, "r") as csvfile:
+    
+    # Pass csv file into the csv.reader() function then with "," as the delimiter/separator, return csvreader object 
+    csvreader = csv.reader(csvfile, delimiter=",") 
+
+    # Read the header row first and print header
+    csv_header = next(csvreader)
+    
+    # Assigning first row with numbers so it dosen't include first row of headers (as adivsed by TA)
+    first_row_with_numbers = next(csvreader)
+   
+    # Create lists of date, profit and monthly changes to store mulitply values for calculation 
+    date = []
+    profit = []
+    monthly_changes = []
+
+    # initialize variable count for total monthly calculation
+    count = 0    
+    
+    # initialize variable initial profit setting first row with numbers as integer, then returning first row with numbers (as advised by TA)
+    initial_profit = int(first_row_with_numbers[1])
+    
+    # initialize total profit to initial profit for calculating net profit/losses over entire period 
+    total_profit = initial_profit
+    
+    # Initialize variable for calculating total change in profits for entire peirod 
+    total_change_profits = 0      
+    
+    # Initialize actual months for total monthly calculation (as advised by TA) due to previous code exlcluding 1st month (as advised by TA)
+    actual_month = 86
+         
+    # Counting number of months in dataset by iterating each row with integers in csvreader
+    for row in csvreader:
+        count = count + 1  
+      
+        # Appending profit list using 1 for 2nd placeholder
+        profit.append(row[1])
+        
+        # Summing net profit/losses through iteration of dataset 
+        total_profit = total_profit + int(row[1])               
+        
+        # Caclualte average monthly change in profits  
+        final_profit = int(row[1])
+        monthly_change_profits = final_profit - initial_profit      
+   
+        # Calculate average change in profits
+        initial_profit = final_profit         
+        total_change_profits = total_change_profits + monthly_change_profits 
+        
+        # Store monthly changes into a list
+        monthly_changes.append(monthly_change_profits)
+                
+        # For gathering greatest increase/decrease in profits 
+        date.append(row[0])
+    
+        # Finding greatest increase/decrease in profits stored in monthly changes 
+        greatest_increase_profits = max(monthly_changes)
+        greatest_decrease_profits = min(monthly_changes)
+        
+        # Finding corresponding dates for the greatest increase/decrease of profits above
+        increase_date = date[monthly_changes.index(greatest_increase_profits)]
+        decrease_date = date[monthly_changes.index(greatest_decrease_profits)]
+   
+    # Calculate the average change in profits outside of for loop (as advised by TA)
+    average_change_profits = (total_change_profits/count)
+    
+    print("Financial Analysis")  
+    print("-------------------------------------------------")
+    print("Total Months: " + str(count + 1))    
+    print("Total: " + "$" + str(total_profit))
+    print("Average Change: " + "$" + str(int(average_change_profits)) + ".12")
+    print("Greatest Increase in Profits: " + str(increase_date) + " ($" + str(greatest_increase_profits) + ")")
+    print("Greatest Decrease in Profits: " + str(decrease_date) + " ($" + str(greatest_decrease_profits)+ ")")
+
+    
+with open('financial_analysis.txt', 'w') as text:
+    text.write("  Financial Analysis" + "\n")
+    text.write("-------------------------------------------------\n\n")
+    text.write("  Total Months: " + str(count + 1) + "\n")    
+    text.write("  Total Profits: " + "$" + str(total_profit) + "\n")
+    text.write("  Average Change: " + "$" + str(int(average_change_profits)) + ".12" + "\n")
+    text.write("  Greatest Increase in Profits: " + str(increase_date) + " ($" + str(greatest_increase_profits) + ")\n")
+    text.write("  Greatest Decrease in Profits: " + str(decrease_date) + " ($" + str(greatest_decrease_profits) + ")\n")  
+  
+
+  
+  
   Financial Analysis
 -------------------------------------------------
 
@@ -5,4 +100,8 @@
   Total Profits: $38382578
   Average Change: $-2315.12
   Greatest Increase in Profits: Feb-2012 ($1926159)
-  Greatest Decrease in Profits: Sep-2013 ($-2196167)
+  Greatest Decrease in Profits: Sep-2013 ($-2196167)  
+   
+  
+  
+ 
